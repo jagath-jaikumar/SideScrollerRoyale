@@ -1,7 +1,7 @@
 var phaser = require('phaser');
 var Game = require('./game')
 
-var resize = require('./components/resize')
+// var resize = require('./components/resize')
 
 window.addEventListener('load', () => {
   let game = new Game();

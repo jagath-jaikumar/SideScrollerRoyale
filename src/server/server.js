@@ -5,8 +5,8 @@ var io = require('socket.io').listen(server);
 var compression = require('compression');
 var helmet = require('helmet');
 const path = require('path');
-var router = require('./router');
-var socket = require('./sockets')(io);
+var router = require('./routes/router');
+var socket = require('./socket/sockets')(io);
 
 
 

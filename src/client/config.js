@@ -1,4 +1,7 @@
-var PreloadScene  = require('./scenes/preloadScene')
+var PreloadScene  = require('./scenes/preloadScene');
+var MenuScene  = require('./scenes/menuScene');
+var MainScene  = require('./scenes/mainScene');
+
 
 const DEFAULT_WIDTH = 1750;
 const DEFAULT_HEIGHT = 850;
@@ -21,7 +24,10 @@ exports.config = {
     width: DEFAULT_WIDTH,
     height: DEFAULT_HEIGHT
   },
-  scene: [PreloadScene],
+  dom: {
+      createContainer: true
+  },
+  scene: [PreloadScene, MenuScene, MainScene],
   physics: {
     default: 'matter',
     matter: {
@@ -31,5 +37,5 @@ exports.config = {
       debug: false,
       debugBodyColor: 0xff00ff
     }
-  }
+  },
 };

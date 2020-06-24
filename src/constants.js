@@ -1,0 +1,2 @@
+exports.MAX_PLAYERS_PER_ROOM = 4;
+export.USER_KICK_TIMEOUT = 60000;
