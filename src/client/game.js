@@ -1,3 +1,3 @@
 var io = require('socket.io-client')
 var socket = io()
-var phaser = require('Phaser');
+var phaser = require('phaser');

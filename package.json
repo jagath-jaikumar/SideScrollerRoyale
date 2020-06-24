@@ -8,7 +8,10 @@
     "webpack" : "webpack",
     "build": "npm run webpack -- --mode development",
     "dev": "nodemon src/server/server.js",
-    "test": "npm run build && npm run dev"
+    "test": "npm run build && npm run dev",
+    "serve": "node src/server/server.js",
+    "docker:start":"npm run serve",
+    "docker:up":"docker-compose build && docker-compose up"
   },
   "author": {
     "name": "Jagath Jai Kumar",
