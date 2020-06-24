@@ -6,9 +6,10 @@
   "main": "server.js",
   "scripts": {
     "webpack" : "webpack",
-    "build": "npm run webpack -- --mode development",
+    "build": "npm run webpack -- --mode development --watch",
+    "build:prod":"npm run webpack -- --mode development",
     "dev": "nodemon src/server/server.js",
-    "test": "npm run build && npm run dev",
+    "test": "npm run dev",
     "serve": "node src/server/server.js",
     "docker:start":"npm run serve",
     "docker:up":"docker-compose build && docker-compose up"
