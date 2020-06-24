@@ -2,7 +2,7 @@
   "name": "SideScrollerRoyale",
   "version": "1.0.0",
   "description": "Phaser 3 - Real-Time Multiplayer Side Scroller Royale Game",
-  "homepage": "https://github.com/jagath-jaikumar",
+  "homepage": "https://github.com/jagath-jaikumar/SideScrollerRoyale",
   "main": "server.js",
   "scripts": {
     "webpack" : "webpack",
@@ -19,7 +19,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/jagath-jaikumar"
+    "url": "https://github.com/jagath-jaikumar/SideScrollerRoyale.git"
   },
   "license": "MIT",
   "dependencies": {
