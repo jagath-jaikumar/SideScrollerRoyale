@@ -13,13 +13,18 @@ module.exports = class PreloadScene extends Phaser.Scene {
   }
 
   create() {
-    let socket = io();
+    const url = `${location.origin}/G` /* short for stats */
+
+    let socket = io.connect(url, { transports: ['websocket'] })
 
     socket.on('connect', () => {
-      console.log("You're connected to socket.io");
-
-
-      this.scene.start('MenuScene', { socket });
+      console.log("connected");
     });
+
+     socket.on('clientId', (clientId) => {
+      socket.clientId = clientId
+      console.log('Your client id', clientId)
+      this.scene.start('MenuScene', { socket })
+    })
   }
 }

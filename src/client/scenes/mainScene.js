@@ -9,13 +9,20 @@ module.exports = class MainScene extends Phaser.Scene {
     const { scene, playerName, socket } = props;
     this.playerName = playerName;
     this.socket = socket;
-    this.socket.emit('newPlayer', { scene, playerName });
+    this.socket.emit('joinRoom', { scene, playerName })
   }
 
 
   preload() {}
 
   create() {
+    const styles = {
+      color: '#000000',
+      align: 'center',
+      fontSize: 18
+    };
+
+
     this.platforms = this.physics.add.staticGroup();
 
     this.platforms.create(400, constants.WORLD_HEIGHT, 'ground').setScale(8).refreshBody();
@@ -24,6 +31,10 @@ module.exports = class MainScene extends Phaser.Scene {
     this.player = this.physics.add.sprite(400,1700,'player');
     this.player.setCollideWorldBounds(true);
     this.player.setBounce(0.2);
+
+    this.pname = this.add
+      .text(this.player.x, this.player.y-80, this.playerName, styles)
+      .setOrigin(0.5, 0)
 
     this.cursors = this.input.keyboard.createCursorKeys();
     this.cursors = this.input.keyboard.addKeys(
@@ -48,6 +59,13 @@ module.exports = class MainScene extends Phaser.Scene {
       this.player.setRotation(angle + Math.PI/2);
     }, this);
 
+
+
+
+    this.socket.on('U', function(gameData) {
+      console.log(gameData);
+    });
+
   }
 
   update() {
@@ -69,6 +87,12 @@ module.exports = class MainScene extends Phaser.Scene {
      {
          this.player.setVelocityY(-500);
      }
+
+
+     this.pname.setPosition(this.player.x, this.player.y-80);
+
+
+
 
   }
 

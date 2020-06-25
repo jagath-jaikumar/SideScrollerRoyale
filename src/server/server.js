@@ -6,8 +6,13 @@ var compression = require('compression');
 var helmet = require('helmet');
 const path = require('path');
 var router = require('./routes/router');
-var socket = require('./socket/sockets')(io);
+var SocketGame = require('./socket/socketGame');
+var RoomManager = require('./managers/roomManager');
 
+const ioNsp = io.of('/G');
+
+const roomManager = new RoomManager(ioNsp);
+const ioGame = new SocketGame(ioNsp, roomManager)
 
 
 /* Public folder */
