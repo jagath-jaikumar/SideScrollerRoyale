@@ -1,2 +1,13 @@
 exports.MAX_PLAYERS_PER_ROOM = 4;
-export.USER_KICK_TIMEOUT = 60000;
+exports.USER_KICK_TIMEOUT = 60000;
+
+
+
+exports.GRAVITY = 1000;
+
+exports.DEFAULT_WIDTH = 1600;
+exports.DEFAULT_HEIGHT = 850;
+
+
+exports.WORLD_WIDTH = 1920;
+exports.WORLD_HEIGHT= 1920;

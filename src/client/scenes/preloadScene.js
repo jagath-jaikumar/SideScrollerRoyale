@@ -7,7 +7,9 @@ module.exports = class PreloadScene extends Phaser.Scene {
   }
 
   preload() {
-    
+    this.load.setBaseURL('../assets/game/')
+    this.load.image('player', 'sprites/SpriteCircle.png')
+    this.load.image('ground', 'tiles/platform.png');
   }
 
   create() {
