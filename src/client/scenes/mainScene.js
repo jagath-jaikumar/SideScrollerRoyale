@@ -1,4 +1,5 @@
 var constants = require('../../constants')
+var playerHandler = require('../components/playerHandler');
 
 module.exports = class MainScene extends Phaser.Scene {
   constructor() {
@@ -6,9 +7,10 @@ module.exports = class MainScene extends Phaser.Scene {
   }
 
   init(props) {
-    const { scene, playerName, socket } = props;
+    const { scene, playerName, socket , clientId} = props;
     this.playerName = playerName;
     this.socket = socket;
+    this.clientId = clientId;
     this.socket.emit('joinRoom', { scene, playerName })
   }
 
@@ -16,42 +18,46 @@ module.exports = class MainScene extends Phaser.Scene {
   preload() {}
 
   create() {
-    const styles = {
-      color: '#000000',
-      align: 'center',
-      fontSize: 18
-    };
-
-
     this.platforms = this.physics.add.staticGroup();
 
     this.platforms.create(400, constants.WORLD_HEIGHT, 'ground').setScale(8).refreshBody();
 
+    this.otherPlayers = {};
+    this.otherPnames = {};
 
-    this.player = this.physics.add.sprite(400,1700,'player');
-    this.player.setCollideWorldBounds(true);
-    this.player.setBounce(0.2);
+    var self = this;
 
-    this.pname = this.add
-      .text(this.player.x, this.player.y-80, this.playerName, styles)
-      .setOrigin(0.5, 0)
 
-    this.cursors = this.input.keyboard.createCursorKeys();
-    this.cursors = this.input.keyboard.addKeys(
-    {
-      up:Phaser.Input.Keyboard.KeyCodes.W,
-      down:Phaser.Input.Keyboard.KeyCodes.S,
-      left:Phaser.Input.Keyboard.KeyCodes.A,
-      right:Phaser.Input.Keyboard.KeyCodes.D
+
+
+    this.socket.on('CurrentPlayers', function(players) {
+      for (const player in players){
+        var playerData = players[player];
+        if (playerData.clientId === this.clientId) {
+          playerHandler.addPlayer(playerData,self);
+        } else {
+          playerHandler.addOtherPlayer(playerData, self);
+        }
+      }
     });
 
+    this.socket.on('NewPlayer', function(player) {
+      playerHandler.addOtherPlayer(player, self);
+    })
 
-    this.physics.add.collider(this.player, this.platforms);
+    this.socket.on('DestroyPlayer', function(clientId) {
+      self.otherPnames[clientId].destroy();
+      self.otherPlayers[clientId].destroy();
+    })
 
-    this.cameras.main.startFollow(this.player, true);
-    this.cameras.main.setBounds(0, 0, constants.WORLD_WIDTH, constants.WORLD_HEIGHT);
-    this.physics.world.setBounds(0, 0, constants.WORLD_WIDTH, constants.WORLD_HEIGHT);
-
+    this.socket.on('UpdateClient', function(gameData) {
+      for (const playerId in gameData.players) {
+        var playerObj = gameData.players[playerId];
+        if (playerObj.clientId !== this.clientId){
+          playerHandler.updatePlayer(playerObj,self);
+        }
+      }
+    });
 
     this.input.on('pointermove', function (pointer) {
       let cursor = pointer;
@@ -60,41 +66,56 @@ module.exports = class MainScene extends Phaser.Scene {
     }, this);
 
 
+    this.cameras.main.setBounds(0, 0, constants.WORLD_WIDTH, constants.WORLD_HEIGHT);
+    this.physics.world.setBounds(0, 0, constants.WORLD_WIDTH, constants.WORLD_HEIGHT);
 
-
-    this.socket.on('U', function(gameData) {
-      console.log(gameData);
+    this.cursors = this.input.keyboard.createCursorKeys();
+    this.cursors = this.input.keyboard.addKeys(
+    {
+      w:Phaser.Input.Keyboard.KeyCodes.W,
+      up:Phaser.Input.Keyboard.KeyCodes.UP,
+      s:Phaser.Input.Keyboard.KeyCodes.S,
+      down:Phaser.Input.Keyboard.KeyCodes.DOWN,
+      a:Phaser.Input.Keyboard.KeyCodes.A,
+      left:Phaser.Input.Keyboard.KeyCodes.LEFT,
+      d:Phaser.Input.Keyboard.KeyCodes.D,
+      right:Phaser.Input.Keyboard.KeyCodes.RIGHT
     });
 
   }
 
   update() {
 
-    if (this.cursors.left.isDown)
-    {
-        this.player.setVelocityX(-500);
+    if (this.player) {
+      if (this.cursors.left.isDown || this.cursors.a.isDown)
+      {
+          this.player.setVelocityX(-500);
+      }
+      else if (this.cursors.right.isDown || this.cursors.d.isDown)
+      {
+          this.player.setVelocityX(500);
+      } else
+      {
+          this.player.setVelocityX(0);
+      }
+      if ((this.cursors.up.isDown || this.cursors.w.isDown)  && this.player.body.touching.down)
+       {
+           this.player.setVelocityY(-500);
+       }
+
+
+       this.pname.setPosition(this.player.x, this.player.y-80);
+
+
+
+       var myPlayerData = {
+         clientId: this.clientId,
+         x: this.player.x,
+         y: this.player.y,
+         angle: this.player.angle
+       }
+       this.socket.emit('UpdateServer', myPlayerData);
     }
-    else if (this.cursors.right.isDown)
-    {
-        this.player.setVelocityX(500);
-    }
-    else
-    {
-        this.player.setVelocityX(0);
-    }
-
-    if (this.cursors.up.isDown  && this.player.body.touching.down)
-     {
-         this.player.setVelocityY(-500);
-     }
-
-
-     this.pname.setPosition(this.player.x, this.player.y-80);
-
-
-
 
   }
-
-
 }

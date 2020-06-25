@@ -10,13 +10,18 @@ module.exports = class SocketGame {
       });
 
 
+      socket.on('UpdateServer', (indivPlayerData) => {
+        if (roomManager.isRemoving(socket.room)) return
+        if (!roomManager.userExists(socket.room, socket.id)) return
+
+        roomManager.rooms[socket.room].scene.events.emit('UpdateServer',indivPlayerData);
+      });
+
 
       socket.on('disconnect', () => {
         //console.log('someone left');
         roomManager.leaveRoom(socket)
       })
-
-
 
     })
 

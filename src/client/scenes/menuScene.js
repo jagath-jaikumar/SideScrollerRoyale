@@ -3,8 +3,9 @@ module.exports = class MenuScene extends Phaser.Scene {
     super({ key: 'MenuScene' });
   }
   init(props) {
-    const { socket } = props
-    this.socket = socket
+    const { socket, clientId } = props;
+    this.socket = socket;
+    this.clientId = clientId;
   }
   preload() {
     var url;
@@ -52,7 +53,7 @@ module.exports = class MenuScene extends Phaser.Scene {
           var input = printText.text;
           if (input !== 'Enter a nickname' && input !== ""){
 
-            this.scene.start('MainScene', { scene: 'MatterScene', playerName: input, socket: this.socket });
+            this.scene.start('MainScene', { scene: 'MatterScene', playerName: input, socket: this.socket, clientId: this.clientId });
           }
         })
     );

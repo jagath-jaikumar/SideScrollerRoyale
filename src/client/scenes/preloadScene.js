@@ -24,7 +24,7 @@ module.exports = class PreloadScene extends Phaser.Scene {
      socket.on('clientId', (clientId) => {
       socket.clientId = clientId
       console.log('Your client id', clientId)
-      this.scene.start('MenuScene', { socket })
+      this.scene.start('MenuScene', { socket, clientId })
     })
   }
 }

@@ -1,3 +1,5 @@
+var constants = require('../../constants.js')
+
 module.exports = class MainScene extends Phaser.Scene {
   constructor() {
    super({ key: 'MainScene'});
@@ -16,16 +18,30 @@ module.exports = class MainScene extends Phaser.Scene {
    this.players = {};
 
    this.events.addListener('createPlayer', (clientId, socketId, playerName) => {
-     console.log('make a new dude: ' + playerName);
      this.players[clientId] = {
        playerName: playerName,
-       clientId:clientId
+       clientId:parseInt(clientId),
+       x:400,
+       y:constants.WORLD_HEIGHT-200,
+       angle:0,
      };
+
+     this.roomManager.ioNspGame.in(this.roomId).emit('CurrentPlayers', this.players);
+
+  //   this.roomManager.ioNspGame.in(this.roomId).emit('NewPlayer', this.players[clientId]);
+
    });
 
    this.events.addListener('removePlayer', (clientId) => {
-     console.log('a player left: ' + this.players[clientId].playerName);
      delete this.players[clientId];
+     this.roomManager.ioNspGame.in(this.roomId).emit('DestroyPlayer', clientId);
+
+   });
+
+   this.events.addListener('UpdateServer', (indivPlayerData) => {
+     this.players[indivPlayerData.clientId].x = indivPlayerData.x;
+     this.players[indivPlayerData.clientId].y = indivPlayerData.y;
+     this.players[indivPlayerData.clientId].angle = indivPlayerData.angle;
    });
 
 
@@ -34,7 +50,10 @@ module.exports = class MainScene extends Phaser.Scene {
 
 
    var gameData = {players: this.players};
-   this.roomManager.ioNspGame.in(this.roomId).emit('U', gameData);
+   this.roomManager.ioNspGame.in(this.roomId).emit('UpdateClient', gameData);
+
+
+
 
  }
 }
