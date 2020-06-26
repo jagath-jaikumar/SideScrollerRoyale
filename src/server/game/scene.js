@@ -22,8 +22,9 @@ module.exports = class MainScene extends Phaser.Scene {
        playerName: playerName,
        clientId:parseInt(clientId),
        x:400,
-       y:constants.WORLD_HEIGHT-200,
+       y:constants.WORLD_HEIGHT-300,
        angle:0,
+       color:setBg()
      };
 
      this.roomManager.ioNspGame.in(this.roomId).emit('CurrentPlayers', this.players);
@@ -47,13 +48,13 @@ module.exports = class MainScene extends Phaser.Scene {
 
  }
  update(){
-
-
    var gameData = {players: this.players};
    this.roomManager.ioNspGame.in(this.roomId).emit('UpdateClient', gameData);
-
-
-
-
  }
+}
+
+const setBg = () => {
+  const randomColor = Math.floor(Math.random()*16777215);
+  // var res =  '\x' + randomColor.toString(16);
+  return randomColor;
 }

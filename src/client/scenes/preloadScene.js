@@ -10,10 +10,13 @@ module.exports = class PreloadScene extends Phaser.Scene {
     this.load.setBaseURL('../assets/game/')
     this.load.image('player', 'sprites/SpriteCircle.png')
     this.load.image('ground', 'tiles/platform.png');
+
+    this.load.image('groundtiles', 'tiles/groundTiles.png');
+    this.load.tilemapTiledJSON("map", "tiles/map.json");
   }
 
   create() {
-    const url = `${location.origin}/G` /* short for stats */
+    const url = `${location.origin}/G`
 
     let socket = io.connect(url, { transports: ['websocket'] })
 

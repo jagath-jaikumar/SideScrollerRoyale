@@ -7,5 +7,5 @@ exports.DEFAULT_WIDTH = 1600;
 exports.DEFAULT_HEIGHT = 850;
 
 
-exports.WORLD_WIDTH = 1920;
-exports.WORLD_HEIGHT= 1920;
+exports.WORLD_WIDTH = 8192;
+exports.WORLD_HEIGHT= 8192;

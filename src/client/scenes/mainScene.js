@@ -18,16 +18,27 @@ module.exports = class MainScene extends Phaser.Scene {
   preload() {}
 
   create() {
-    this.platforms = this.physics.add.staticGroup();
+    // this.platforms = this.physics.add.staticGroup();
+    //
+    // this.platforms.create(400, constants.WORLD_HEIGHT, 'ground').setScale(8).refreshBody();
 
-    this.platforms.create(400, constants.WORLD_HEIGHT, 'ground').setScale(8).refreshBody();
+
+    const map = this.make.tilemap({ key: "map" });
+
+    console.log(map);
+
+// Parameters are the name you gave the tileset in Tiled and then the key of the tileset image in
+// Phaser's cache (i.e. the name you used in preload)
+    const tileset = map.addTilesetImage("tmap1", "groundtiles");
+
+    this.worldLayer = map.createStaticLayer("Tile Layer 1", tileset, 0, 0);
+    this.worldLayer.setCollisionByProperty({ collides: true });
+
 
     this.otherPlayers = {};
     this.otherPnames = {};
 
     var self = this;
-
-
 
 
     this.socket.on('CurrentPlayers', function(players) {
@@ -40,7 +51,6 @@ module.exports = class MainScene extends Phaser.Scene {
         }
       }
     });
-
     this.socket.on('NewPlayer', function(player) {
       playerHandler.addOtherPlayer(player, self);
     })
@@ -98,11 +108,10 @@ module.exports = class MainScene extends Phaser.Scene {
       {
           this.player.setVelocityX(0);
       }
-      if ((this.cursors.up.isDown || this.cursors.w.isDown)  && this.player.body.touching.down)
+      if ((this.cursors.up.isDown || this.cursors.w.isDown)  && (this.player.body.blocked.down || this.player.body.blocked.left || this.player.body.blocked.right))
        {
            this.player.setVelocityY(-500);
        }
-
 
        this.pname.setPosition(this.player.x, this.player.y-80);
 

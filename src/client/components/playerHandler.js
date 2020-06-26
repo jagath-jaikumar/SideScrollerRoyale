@@ -9,13 +9,15 @@ exports.addPlayer = function (playerObj, self) {
   };
 
   if (madePlayer == false) {
-    self.player = self.physics.add.sprite(playerObj.x,playerObj.y,'player');
+    console.log(playerObj.color);
+    self.player = self.physics.add.sprite(playerObj.x,playerObj.y,'player',0).setTint(playerObj.color);;
     self.player.setCollideWorldBounds(true);
     self.player.setBounce(0.2);
     self.pname = self.add
       .text(playerObj.x, playerObj.y-80, playerObj.playerName, styles)
       .setOrigin(.5, 0)
-    self.physics.add.collider(self.player, self.platforms);
+
+    self.physics.add.collider(self.player, self.worldLayer);
     self.cameras.main.startFollow(self.player, true);
     madePlayer = true;
   }
@@ -31,13 +33,13 @@ exports.addOtherPlayer = function (playerObj, self) {
   };
 
   if (!(playerObj.clientId in self.otherPlayers)){
-    var otherPlayer = self.physics.add.sprite(playerObj.x,playerObj.y,'player');
+    var otherPlayer = self.physics.add.sprite(playerObj.x,playerObj.y,'player',0).setTint(playerObj.color);
     otherPlayer.setCollideWorldBounds(true);
     otherPlayer.setBounce(0.2);
     var otherPname = self.add
       .text(playerObj.x, playerObj.y-80, playerObj.playerName, styles)
       .setOrigin(.5, 0)
-    self.physics.add.collider(otherPlayer, self.platforms);
+    self.physics.add.collider(otherPlayer, self.worldLayer);
 
     self.otherPlayers[playerObj.clientId] = otherPlayer;
     self.otherPnames[playerObj.clientId] = otherPname;
